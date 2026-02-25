@@ -37,6 +37,7 @@ public:
     void setConsoleOutput(bool enable);// 启用/禁用控制台输出（默认启用）
     std::string currentTimeToString() const;    //输出当前时间
     std::string levelToString(LogLevel level) const;
+    std::string execCmd(const std::string& cmd);    // 运行cmd命令
 
     void logDebug(std::string str);
     void logInfo(std::string str);

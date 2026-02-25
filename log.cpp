@@ -57,6 +57,7 @@ void Log::setLogLevel(LogLevel level)
 bool Log::setOutputFile(const std::string &filepath)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
+    std::string cmd = std::string("touch ") + filepath;
     auto newStream = std::make_unique<std::ofstream>(filepath, std::ios::app);
     if (newStream->is_open())
     {
@@ -109,4 +110,17 @@ void Log::logWarning(std::string str)
 void Log::logError(std::string str)
 {
     logBase(str, LogLevel::ERROR);
+}
+
+std::string Log::execCmd(const std::string& cmd)
+{
+    char buf[1024] = {0};
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if(!pipe)
+        return "";
+    std::string result;
+    while(fgets(buf, sizeof(buf), pipe) != nullptr)
+        result += buf;
+    pclose(pipe);
+    return result;
 }
